@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Building a Web Application with Hug, MongoDb, and Vue.js Part 1</title><meta name="description" itemprop="description" content="A quick disclaimer: This tutorial assumes a working knowledge of the Linux command Line, access to a text editor, and a basic programming background. None of the steps outlined here are guaranteed to work on Mac or Windows machines as I do not have enough experience working in those environments. Also, I am not responsible if you make a mistake and blow up your machine. Why? I personally find it to be a fun exercise to try building small projects with new packages and libraries I&amp;rsquo;ve never used before." id="desc"><meta name="generator" content="Hugo 0.23" /><meta name="keywords" itemprop="keywords" content="Python,Hug,Marshmallow,MongoDb,PyMongo,Passlib" id="keywords"><link rel="canonical" href="https://ffx01.github.io/jwdev/tutorials/building-web-app-hug-mongodb-vue/">
+    <title>Building a Web Application with Hug, MongoDb, and Vue.js Part 1</title><meta name="description" itemprop="description" content="A quick disclaimer: This tutorial assumes a working knowledge of the Linux command Line, access to a text editor, and a basic programming background. None of the steps outlined here are guaranteed to work on Mac or Windows machines as I do not have enough experience working in those environments. Also, I am not responsible if you make a mistake and blow up your machine. Why? I personally find it to be a fun exercise to try building small projects with new packages and libraries I&amp;rsquo;ve never used before." id="desc"><meta name="generator" content="Hugo 0.23" /><meta name="keywords" itemprop="keywords" content="Python,MongoDb,Vue" id="keywords"><link rel="canonical" href="https://ffx01.github.io/jwdev/tutorials/building-web-app-hug-mongodb-vue/">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://ffx01.github.io/jwdev/hashover/comments.css">
     <link rel="stylesheet" type="text/css" href="https://ffx01.github.io/jwdev/styles.css">
@@ -75,7 +75,7 @@
 
 <h1 id="what-we-will-be-building">What we will be Building</h1>
 
-<p>We will build a simple movie database from scratch. The reasons for this are listed in the <a href="/tutorials/building-web-app-hug-mongodb-vue/#outlining-our-application">Outlining our Application</a> section below.</p>
+<p>We will build a simple movie database from scratch. The reasons for this are listed in the <a href="../../tutorials/building-web-app-hug-mongodb-vue/#outlining-our-application">Outlining our Application</a> section below.</p>
 
 <h1 id="stuff-we-ll-be-using">Stuff we&rsquo;ll be using:</h1>
 
@@ -114,16 +114,14 @@
 <h3 id="python">Python</h3>
 
 <p>First, you&rsquo;ll want to ensure that you have Python 3 installed. You can check if you have it installed by opening up your terminal and running the following command:</p>
-
-<pre><code class="language-bash">python3 --version
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%">python3 --version
+</pre></div>
 
 <p>You&rsquo;ll want to ensure that you are using at least version 3.5 as the code in this tutorial will not work with older versions of Python.</p>
 
 <p>If you do not already have <code>virtualenv</code> installed, you can install it globally by running the following command:</p>
-
-<pre><code class="language-bash">sudo pip3 install virtualenv
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%">sudo pip3 install virtualenv
+</pre></div>
 
 <p>If you are having any trouble installing virtualenv, you can get some more information <a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">here</a> and <a href="https://virtualenv.pypa.io/en/stable/">here</a>.</p>
 
@@ -138,29 +136,25 @@
 <h1 id="setup">Setup</h1>
 
 <p>Ok, now that we have all of the basic tools we need, we can finally create a directory for our project. Use your terminal to create a new directory in your projects directory with the following command(on Linux):</p>
-
-<pre><code class="language-bash">mkdir movies
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%">mkdir movies
+</pre></div>
 
 <p>Then, move into that directory and create a Python virtual environment:</p>
-
-<pre><code class="language-bash">cd movies/
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">cd</span> movies/
 virtualenv -p python3.5 venv
-</code></pre>
+</pre></div>
 
 <p>We then need to activate our virtual environment:</p>
-
-<pre><code class="language-bash">source venv/bin/activate
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">source</span> venv/bin/activate
+</pre></div>
 
 <p>This will ensure that when we install any packages or call the CPython interpreter, we will be using the packages and interpreter from our virtual environment and not our global environment.</p>
 
 <p>Now we will install our Python dependencies:</p>
-
-<pre><code class="language-bash">pip install hug --upgrade
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%">pip install hug --upgrade
 pip install pymongo
 pip install marshmallow
-</code></pre>
+</pre></div>
 
 <p>Hug is the web application framework we will be using to create our API. It is quite capable. It&rsquo;s not only designed for web APIs; it can help you write all sorts of interfaces.</p>
 
@@ -171,44 +165,40 @@ pip install marshmallow
 <h1 id="code">Code!!!</h1>
 
 <p>We&rsquo;re finally ready to get our hands dirty and write some code! I know it took a while to get here, but I promise it will be worth it. Let&rsquo;s create a directory for our code to live in:</p>
-
-<pre><code class="language-bash">mkdir app
-cd app
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%">mkdir app
+<span style="color: #f8f8f2">cd</span> app
 touch app.py
-</code></pre>
+</pre></div>
 
 <p>Open <code>app.py</code> in a text editor of your choice. We&rsquo;ll get started with something simple so you can get an idea of how Hug works:</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">## filename: app.py</span>
 
-<pre><code class="language-python">## filename: app.py
-
-import hug  # We need this to define our application
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">hug</span>  <span style="color: #75715e"># We need this to define our application</span>
 
 
-# This decorator is one way that Hug performs HTTP routing. If we leave out the path(&quot;/hello&quot;),
-# it will default to the name of the function. So, in this particular case, nothing would change.
-@hug.get(&quot;/hello&quot;)
-def hello(name: hug.types.text=&quot;Anonymous&quot;):
-  &quot;&quot;&quot;
-    Returns a response containing a greeting with the user's name.
-  &quot;&quot;&quot;
-  return {
-    &quot;message&quot;: &quot;Hello, {n}!&quot;.format(n=name)
-  }
-</code></pre>
+<span style="color: #75715e"># This decorator is one way that Hug performs HTTP routing. If we leave out the path(&quot;/hello&quot;),</span>
+<span style="color: #75715e"># it will default to the name of the function. So, in this particular case, nothing would change.</span>
+<span style="color: #a6e22e">@hug.get</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;/hello&quot;</span><span style="color: #f8f8f2">)</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">hello</span><span style="color: #f8f8f2">(name:</span> <span style="color: #f8f8f2">hug</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">types</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">text</span><span style="color: #f92672">=</span><span style="color: #e6db74">&quot;Anonymous&quot;</span><span style="color: #f8f8f2">):</span>
+  <span style="color: #e6db74">&quot;&quot;&quot;</span>
+<span style="color: #e6db74">    Returns a response containing a greeting with the user&#39;s name.</span>
+<span style="color: #e6db74">  &quot;&quot;&quot;</span>
+  <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #e6db74">&quot;message&quot;</span><span style="color: #f8f8f2">:</span> <span style="color: #e6db74">&quot;Hello, {n}!&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">format(n</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">name)</span>
+  <span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>We can then run our application by using the following command: (make sure you are in the same directory as <code>app.py</code>)</p>
-
-<pre><code class="language-bash">hug -f app.py
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%">hug -f app.py
+</pre></div>
 
 <p>You should see some text on the screen with some information from hug about the application. You can now access your application at <a href="http://localhost:8000/">http://localhost:8000/</a>. Try opening that address in a web browser or making a request using a CLI tool like <code>curl</code> or <code>httpie</code>. You should receive some JSON back with information about the routes of your API. This is because we haven&rsquo;t defined a root route yet.</p>
 
 <p>Now try making a request to <a href="http://localhost:8000/hello">http://localhost:8000/hello</a>. You should receive the following:</p>
-
-<pre><code class="language-JSON">{
-  &quot;message&quot;: &quot;Hello, Anonymous!&quot;
-}
-</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">{</span>
+  <span style="color: #f92672">&quot;message&quot;</span><span style="color: #f8f8f2">:</span> <span style="color: #e6db74">&quot;Hello, Anonymous!&quot;</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
 
 <p>Now try it with your name: <a href="http://localhost:8000/hello?name=John">http://localhost:8000/hello?name=John</a>. Pretty cool, huh? I hope this illustrates the basic operation of the Hug library.</p>
 
@@ -352,7 +342,7 @@ def hello(name: hug.types.text=&quot;Anonymous&quot;):
 
 <h1 id="part-1-conclusion">Part 1 Conclusion</h1>
 
-<p>That&rsquo;s it for part one. I know it doesn&rsquo;t seem like we&rsquo;ve accomplished much, but we really have. We all ready to start implementing our application know. We have all of the tools and libraries that we will need at this stage of development, we have a good idea of what our application needs to accomplish, and we have a basic outline for our persistent data! Part 2 will likely be coming within the next couple of weeks, so stay tuned!</p>
+<p>That&rsquo;s it for part one. I know it doesn&rsquo;t seem like we&rsquo;ve accomplished much, but we really have. We&rsquo;re all ready to start implementing our application now. We have all of the tools and libraries that we will need at this stage of development, we have a good idea of what our application needs to accomplish, and we have a basic outline for our persistent data! Part 2 will likely be coming within the next couple of weeks, so stay tuned!</p>
 </span>
     </div>
     
@@ -369,31 +359,13 @@ def hello(name: hug.types.text=&quot;Anonymous&quot;):
     		<li itemprop="relatedUrl" itemscope itemtype="http://schema.org/URL">
     			
     			
-    			<a class="row-item button" href="https://ffx01.github.io/tags/hug" rel="tag" itemprop="url">hug</a>
-    		</li>
-    		
-    		<li itemprop="relatedUrl" itemscope itemtype="http://schema.org/URL">
-    			
-    			
-    			<a class="row-item button" href="https://ffx01.github.io/tags/marshmallow" rel="tag" itemprop="url">marshmallow</a>
-    		</li>
-    		
-    		<li itemprop="relatedUrl" itemscope itemtype="http://schema.org/URL">
-    			
-    			
     			<a class="row-item button" href="https://ffx01.github.io/tags/mongodb" rel="tag" itemprop="url">mongo db</a>
     		</li>
     		
     		<li itemprop="relatedUrl" itemscope itemtype="http://schema.org/URL">
     			
     			
-    			<a class="row-item button" href="https://ffx01.github.io/tags/pymongo" rel="tag" itemprop="url">py mongo</a>
-    		</li>
-    		
-    		<li itemprop="relatedUrl" itemscope itemtype="http://schema.org/URL">
-    			
-    			
-    			<a class="row-item button" href="https://ffx01.github.io/tags/passlib" rel="tag" itemprop="url">passlib</a>
+    			<a class="row-item button" href="https://ffx01.github.io/tags/vue" rel="tag" itemprop="url">vue</a>
     		</li>
     		
     	</ul>
@@ -401,9 +373,34 @@ def hello(name: hug.types.text=&quot;Anonymous&quot;):
     
     
     
+    	
+    	<div id="authorbox" class="row vcenter memberbox" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    		<div class="row-item member-avatar" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
+    				<img alt="Justin Walters avatar" src="https://avatars3.githubusercontent.com/u/6164955?v=3&amp;s=460" itemprop="contentUrl" />
+    		</div>
+    		<div class="row-item member-bio">
+    			<div>
+    				<span class="widget-title">About <span itemprop="name">Justin Walters</span></span>
+    			</div>
+    			<p itemprop="description">
+    				I&#39;m a professional programmer and part-time tutorial author.
+    			</p>
+    		</div>
+    	</div>
+    	
+    
     
   </article>
   
+  
+  <div class="post-comments">
+    
+      
+        <a href="https://muut.com/i/jwdev/comments" class="muut" type="dynamic">Comments</a>
+        <script src="//cdn.muut.com/1/moot.min.js"></script>
+      
+    
+  </div>
   
 </main>
 
@@ -411,15 +408,6 @@ def hello(name: hug.types.text=&quot;Anonymous&quot;):
   
 
 	
-<div class="widget">
-	<header>
-		<h4><span class="fa fa-pencil"></span> <a href="https://ffx01.github.io/jwdev/post/">Recent Posts</a></h4>
-	</header>
-	<ul>
-		
-	</ul>
-</div>
-
 
   
 
@@ -457,38 +445,20 @@ def hello(name: hug.types.text=&quot;Anonymous&quot;):
 		
 		  
 			
-			<a class="button" href="https://ffx01.github.io/jwdev/tags/hug" title="hug">
-				hug
-			</a>
-		
-		  
-			
-			<a class="button" href="https://ffx01.github.io/jwdev/tags/marshmallow" title="marshmallow">
-				marshmallow
-			</a>
-		
-		  
-			
 			<a class="button" href="https://ffx01.github.io/jwdev/tags/mongodb" title="mongodb">
-				mongodb
-			</a>
-		
-		  
-			
-			<a class="button" href="https://ffx01.github.io/jwdev/tags/passlib" title="passlib">
-				passlib
-			</a>
-		
-		  
-			
-			<a class="button" href="https://ffx01.github.io/jwdev/tags/pymongo" title="pymongo">
-				pymongo
+				mongodb (1)
 			</a>
 		
 		  
 			
 			<a class="button" href="https://ffx01.github.io/jwdev/tags/python" title="python">
-				python
+				python (1)
+			</a>
+		
+		  
+			
+			<a class="button" href="https://ffx01.github.io/jwdev/tags/vue" title="vue">
+				vue (1)
 			</a>
 		
 	</div>
