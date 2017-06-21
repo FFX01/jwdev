@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tutorials on Justin&#39;s Blog</title>
+    <link>https://ffx01.github.io/jwdev/tutorials/</link>
+    <description>Recent content in Tutorials on Justin&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 20 Jun 2017 18:26:39 -0700</lastBuildDate>
+    
+	<atom:link href="https://ffx01.github.io/jwdev/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Building a Web Application with Hug, MongoDb, and Vue.js Part 1</title>
+      <link>https://ffx01.github.io/jwdev/tutorials/building-web-app-hug-mongodb-vue/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tutorials/building-web-app-hug-mongodb-vue/</guid>
+      <description>A quick disclaimer: This tutorial assumes a working knowledge of the Linux command Line, access to a text editor, and a basic programming background. None of the steps outlined here are guaranteed to work on Mac or Windows machines as I do not have enough experience working in those environments. Also, I am not responsible if you make a mistake and blow up your machine.
+Why? I personally find it to be a fun exercise to try building small projects with new packages and libraries I&amp;rsquo;ve never used before.</description>
+    </item>
+    
+  </channel>
+</rss>

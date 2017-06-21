@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Justin&#39;s Blog</title>
+    <link>https://ffx01.github.io/jwdev/tags/</link>
+    <description>Recent content in Tags on Justin&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 20 Jun 2017 18:26:39 -0700</lastBuildDate>
+    
+	<atom:link href="https://ffx01.github.io/jwdev/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hug</title>
+      <link>https://ffx01.github.io/jwdev/tags/hug/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tags/hug/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Marshmallow</title>
+      <link>https://ffx01.github.io/jwdev/tags/marshmallow/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tags/marshmallow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mongodb</title>
+      <link>https://ffx01.github.io/jwdev/tags/mongodb/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tags/mongodb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Passlib</title>
+      <link>https://ffx01.github.io/jwdev/tags/passlib/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tags/passlib/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pymongo</title>
+      <link>https://ffx01.github.io/jwdev/tags/pymongo/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tags/pymongo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://ffx01.github.io/jwdev/tags/python/</link>
+      <pubDate>Tue, 20 Jun 2017 18:26:39 -0700</pubDate>
+      
+      <guid>https://ffx01.github.io/jwdev/tags/python/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

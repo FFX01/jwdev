@@ -1,0 +1,412 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="Justin Walters">
+
+<meta name="description" content="">
+
+<title>Building a Web Application with Hug, MongoDb, and Vue.js Part 1</title>
+<meta name="generator" content="Hugo 0.23" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="https://ffx01.github.io/jwdevcss/theme.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    <h3 class="home-link"><a href="/">Root</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">Justin&#39;s Blog - Most recent posts</h3>
+        <ul>
+            
+            <li><a href="https://ffx01.github.io/jwdev/tutorials/building-web-app-hug-mongodb-vue/">Building a Web Application with Hug, MongoDb, and Vue.js Part 1</a></li>
+            
+        </ul>
+    </div>
+
+    
+    <div id="tags" class="open">
+        <h3 data-open="tags">Tags</h3>
+        <ul class="tags">
+            
+            <li><a href="/tags/hug">hug</a></li>
+            
+            <li><a href="/tags/marshmallow">marshmallow</a></li>
+            
+            <li><a href="/tags/mongodb">mongodb</a></li>
+            
+            <li><a href="/tags/passlib">passlib</a></li>
+            
+            <li><a href="/tags/pymongo">pymongo</a></li>
+            
+            <li><a href="/tags/python">python</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="categories" class="open">
+        <h3 data-open="categories">Categories</h3>
+        <ul class="categories">
+            
+            <li><a href="/categories/tutorial">tutorial</a></li>
+            
+            <li><a href="/categories/web-development">web-development</a></li>
+            
+        </ul>
+    </div>
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>Building a Web Application with Hug, MongoDb, and Vue.js Part 1</h1>
+<h4>Published 06-20-2017 18:26:39</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="https://ffx01.github.io/jwdev/tutorials/building-web-app-hug-mongodb-vue/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p><strong>A quick disclaimer</strong>: This tutorial assumes a working knowledge of the Linux command Line, access to a text editor, and a basic programming background. None of the steps outlined here are guaranteed to work on Mac or Windows machines as I do not have enough experience working in those environments. Also, I am not responsible if you make a mistake and blow up your machine.</p>
+
+<h1 id="why">Why?</h1>
+
+<p>I personally find it to be a fun exercise to try building small projects with new packages and libraries I&rsquo;ve never used before. It&rsquo;s even more fun to combine libraries into a stack that I haven&rsquo;t seen before.</p>
+
+<h1 id="what-we-will-be-building">What we will be Building</h1>
+
+<p>We will build a simple movie database from scratch. The reasons for this are listed in the <a href="/tutorials/building-web-app-hug-mongodb-vue/#outlining-our-application">Outlining our Application</a> section below.</p>
+
+<h1 id="stuff-we-ll-be-using">Stuff we&rsquo;ll be using:</h1>
+
+<h3 id="python-3">Python 3</h3>
+
+<p>I&rsquo;ve been a Python fanboy ever since I started programming. I find it to be a great language for back-end web development. It&rsquo;s flexible and has pleasant syntax.</p>
+
+<h3 id="hug">Hug</h3>
+
+<p>Hug is library designed to help developers create Web Applications, Command line interfaces, and all sorts of other useful abstractions. We will be using it&rsquo;s web API functionality.</p>
+
+<h3 id="mongodb">MongoDb</h3>
+
+<p>MongoDb has gotten a lot of flack over the years for lack of security. In reality, this isn&rsquo;t the case. The real issue is that Mongo does not come with any security configuration out-of-the-box! This means that when a Mongo-backed application is deployed into production, you need to ensure you have configured access control. Otherwise, any old joe-schmoe can do whatever they want to your data. Mongo security configuration is out of the scope of this tutorial, but you can read more about it <a href="https://docs.mongodb.com/manual/security/">here</a>.</p>
+
+<p>We will be using mongo for our project because I haven&rsquo;t seen it paired with Python out in the wild all that often. Plus, working without rigorous schemas can be refreshing sometimes.</p>
+
+<h3 id="pymongo-package">Pymongo package</h3>
+
+<p><a href="https://github.com/mongodb/mongo-python-driver">Pymongo</a> is a driver for MongoDb. It will allow us to interface with Mongo from our Python application. There are some ODMs(Object Document Mappers) out there, but I find them to be a bit overkill for working with Mongo. YMMV.</p>
+
+<h3 id="marshmallow-package">Marshmallow package</h3>
+
+<p>We will be using the Python <a href="https://github.com/marshmallow-code/marshmallow">Marshmallow</a> package for JSON serialization. It will also help us enforce data validation for our Mongo documents.</p>
+
+<h3 id="python-virtualenv">Python Virtualenv</h3>
+
+<p>A Python <a href="https://virtualenv.pypa.io/en/stable/">Virtualenv</a> is exactly what it sounds like. It allows us to create isolated Python runtime environments so we don&rsquo;t accidentally polute or break our system level Python package.</p>
+
+<h3 id="vue-js">Vue.js</h3>
+
+<p><a href="https://vuejs.org/">Vue</a> is a client-side javascript view library. We will be using it to create a Single Page App style interface for our project. We will also be using <a href="https://webpack.github.io/">Webpack</a> to compile and minify our front-end assets. Setup instructions for Vue with Webpack will be covered in later parts of this tutorial.</p>
+
+<h1 id="getting-started">Getting Started</h1>
+
+<h3 id="python">Python</h3>
+
+<p>First, you&rsquo;ll want to ensure that you have Python 3 installed. You can check if you have it installed by opening up your terminal and running the following command:</p>
+
+<pre><code class="language-bash">python3 --version
+</code></pre>
+
+<p>You&rsquo;ll want to ensure that you are using at least version 3.5 as the code in this tutorial will not work with older versions of Python.</p>
+
+<p>If you do not already have <code>virtualenv</code> installed, you can install it globally by running the following command:</p>
+
+<pre><code class="language-bash">sudo pip3 install virtualenv
+</code></pre>
+
+<p>If you are having any trouble installing virtualenv, you can get some more information <a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">here</a> and <a href="https://virtualenv.pypa.io/en/stable/">here</a>.</p>
+
+<h3 id="mongodb-1">MongoDb</h3>
+
+<p>We will need a global install of MongoDb as well. You can go <a href="https://docs.mongodb.com/manual/installation/#tutorials">here</a> to find installation instructions for your machine.</p>
+
+<h3 id="nodejs">NodeJs</h3>
+
+<p>We will be using <a href="https://nodejs.org/en/">Node</a> to run <code>vue-cli</code> and <code>webpack</code>. Therefore, you will need the Node runtime installed. Most Linux distributions offer a distribution of node in their package managers. You can also download it from the official site linked <a href="https://nodejs.org/en/">here</a>.</p>
+
+<h1 id="setup">Setup</h1>
+
+<p>Ok, now that we have all of the basic tools we need, we can finally create a directory for our project. Use your terminal to create a new directory in your projects directory with the following command(on Linux):</p>
+
+<pre><code class="language-bash">mkdir movies
+</code></pre>
+
+<p>Then, move into that directory and create a Python virtual environment:</p>
+
+<pre><code class="language-bash">cd movies/
+virtualenv -p python3.5 venv
+</code></pre>
+
+<p>We then need to activate our virtual environment:</p>
+
+<pre><code class="language-bash">source venv/bin/activate
+</code></pre>
+
+<p>This will ensure that when we install any packages or call the CPython interpreter, we will be using the packages and interpreter from our virtual environment and not our global environment.</p>
+
+<p>Now we will install our Python dependencies:</p>
+
+<pre><code class="language-bash">pip install hug --upgrade
+pip install pymongo
+pip install marshmallow
+</code></pre>
+
+<p>Hug is the web application framework we will be using to create our API. It is quite capable. It&rsquo;s not only designed for web APIs; it can help you write all sorts of interfaces.</p>
+
+<p>Pymongo, as mentioned above, is the package we will be using to interface with our MongoDb database.</p>
+
+<p>Marshmallow, as mentioned above is the package we will be using to help us enforce data types and serialize to and from JSON.</p>
+
+<h1 id="code">Code!!!</h1>
+
+<p>We&rsquo;re finally ready to get our hands dirty and write some code! I know it took a while to get here, but I promise it will be worth it. Let&rsquo;s create a directory for our code to live in:</p>
+
+<pre><code class="language-bash">mkdir app
+cd app
+touch app.py
+</code></pre>
+
+<p>Open <code>app.py</code> in a text editor of your choice. We&rsquo;ll get started with something simple so you can get an idea of how Hug works:</p>
+
+<pre><code class="language-python">## filename: app.py
+
+import hug  # We need this to define our application
+
+
+# This decorator is one way that Hug performs HTTP routing. If we leave out the path(&quot;/hello&quot;),
+# it will default to the name of the function. So, in this particular case, nothing would change.
+@hug.get(&quot;/hello&quot;)
+def hello(name: hug.types.text=&quot;Anonymous&quot;):
+  &quot;&quot;&quot;
+    Returns a response containing a greeting with the user's name.
+  &quot;&quot;&quot;
+  return {
+    &quot;message&quot;: &quot;Hello, {n}!&quot;.format(n=name)
+  }
+</code></pre>
+
+<p>We can then run our application by using the following command: (make sure you are in the same directory as <code>app.py</code>)</p>
+
+<pre><code class="language-bash">hug -f app.py
+</code></pre>
+
+<p>You should see some text on the screen with some information from hug about the application. You can now access your application at <a href="http://localhost:8000/">http://localhost:8000/</a>. Try opening that address in a web browser or making a request using a CLI tool like <code>curl</code> or <code>httpie</code>. You should receive some JSON back with information about the routes of your API. This is because we haven&rsquo;t defined a root route yet.</p>
+
+<p>Now try making a request to <a href="http://localhost:8000/hello">http://localhost:8000/hello</a>. You should receive the following:</p>
+
+<pre><code class="language-JSON">{
+  &quot;message&quot;: &quot;Hello, Anonymous!&quot;
+}
+</code></pre>
+
+<p>Now try it with your name: <a href="http://localhost:8000/hello?name=John">http://localhost:8000/hello?name=John</a>. Pretty cool, huh? I hope this illustrates the basic operation of the Hug library.</p>
+
+<h1 id="outlining-our-application">Outlining our Application</h1>
+
+<p>I suppose I should probably tell you what we&rsquo;ll be building. We will be building a basic movie database! You can think of it like a simple IMDb. I chose this application for this tutorial for a couple of reasons:</p>
+
+<ul>
+<li>It&rsquo;s complex enough that the concepts expressed will have real-world applications.</li>
+<li>It&rsquo;s simple enough that It won&rsquo;t take weeks to build.</li>
+<li>I&rsquo;ve been working on a very similar project for my day job.</li>
+<li>It involves data relationships. Many developers struggle with defining data relationships with MonogDb.</li>
+</ul>
+
+<h3 id="goal">Goal</h3>
+
+<p>Let&rsquo;s define some functions of our application.</p>
+
+<ul>
+<li>Users should be able to create accounts.</li>
+<li>Users should be able to create films. They should also be able to add data about the films they add.</li>
+<li>Users should be able to add credits to those films.</li>
+<li>Users should be able to view details about a film.</li>
+<li>Users should be able to view credits for a film.</li>
+<li>Users should be able to edit existing films and credits.</li>
+</ul>
+
+<p>Woo! That seems like a lot of work! Luckily, the devil is in the research. Once we know about all of the tools to put this application together, the picture becomes a lot more clear. Luckily, you don&rsquo;t have to research any tools and libraries for yourself as I&rsquo;ve already done the hard work for you! I&rsquo;m such a nice guy.</p>
+
+<h3 id="data-entities">Data Entities</h3>
+
+<p>Ah, data. The core of any worth-while application. Let&rsquo;s think about how we can organize our data into entities.</p>
+
+<p>Let&rsquo;s start with the easy one; users. The list items below represent the various pieces of data we will need to store and manipulate. This syntax will be used for the other <code>models</code> as well.</p>
+
+<h4 id="users">Users</h4>
+
+<table>
+<thead>
+<tr>
+<th align="left">Field Name</th>
+<th align="left">Data Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">username</td>
+<td align="left">string</td>
+<td align="left">A unique identifier for the user.</td>
+</tr>
+
+<tr>
+<td align="left">email</td>
+<td align="left">string</td>
+<td align="left">The user&rsquo;s email address so we can contact the user with info about their account.</td>
+</tr>
+
+<tr>
+<td align="left">bio</td>
+<td align="left">string</td>
+<td align="left">The user&rsquo;s biography.</td>
+</tr>
+
+<tr>
+<td align="left">password</td>
+<td align="left">string</td>
+<td align="left">The users hashed password. <strong>Never store passwords as plain text!!!!</strong></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="films">Films</h4>
+
+<table>
+<thead>
+<tr>
+<th align="left">Field Name</th>
+<th align="left">Data Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">title</td>
+<td align="left">string</td>
+<td align="left">The title of the film.</td>
+</tr>
+
+<tr>
+<td align="left">synopsis</td>
+<td align="left">string</td>
+<td align="left">A brief description of the film.</td>
+</tr>
+
+<tr>
+<td align="left">release_date</td>
+<td align="left">string</td>
+<td align="left">An ISO8601 formatted date string representing the date the film was released to the public.</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="credits">Credits</h4>
+
+<table>
+<thead>
+<tr>
+<th align="left">Field Name</th>
+<th align="left">Data Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">name</td>
+<td align="left">string</td>
+<td align="left">The name of the person receiving the credit.</td>
+</tr>
+
+<tr>
+<td align="left">job</td>
+<td align="left">string</td>
+<td align="left">What the person did on the film.</td>
+</tr>
+
+<tr>
+<td align="left">department</td>
+<td align="left">enum</td>
+<td align="left">Which department the person worked on. ex: Acting, Writing &hellip;</td>
+</tr>
+</tbody>
+</table>
+
+<style>td, th {padding: 0.5em;border: 2px solid;}</style>
+
+<p>That covers the 3 big ones. Later on we will need to think about how these pieces of data fit together(how they are <strong>related</strong>). We will also be storing urls for user avatars, pictures for credits, and film posters. That type of data isn&rsquo;t core to the application though, so we can leave it for later.</p>
+
+<h1 id="part-1-conclusion">Part 1 Conclusion</h1>
+
+<p>That&rsquo;s it for part one. I know it doesn&rsquo;t seem like we&rsquo;ve accomplished much, but we really have. We all ready to start implementing our application know. We have all of the tools and libraries that we will need at this stage of development, we have a good idea of what our application needs to accomplish, and we have a basic outline for our persistent data! Part 2 will likely be coming within the next couple of weeks, so stay tuned!</p>
+
+</article>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'jwdev.disqus.com';
+    var disqus_identifier = 'https:\/\/ffx01.github.io\/jwdev\/tutorials\/building-web-app-hug-mongodb-vue\/';
+    var disqus_title = 'Building a Web Application with Hug, MongoDb, and Vue.js Part 1';
+    var disqus_url = 'https:\/\/ffx01.github.io\/jwdev\/tutorials\/building-web-app-hug-mongodb-vue\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+</div>
+</div>
+<script src="js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+
